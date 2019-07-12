@@ -6,7 +6,7 @@ const init = async () => {
             runTab(tab)
         }
 
-        setStatus(tab)
+        setStatus(tab.id)
     })
 
     browser.tabs.onActivated.addListener(({tabId}) => {
@@ -23,7 +23,7 @@ const init = async () => {
                 runTab(tab)
 
                 if (tab.active) {
-                    setStatus(tab)
+                    setStatus(tab.id)
                 }
             }
         },
@@ -33,16 +33,16 @@ const init = async () => {
     browser.tabs.onRemoved.addListener(stopTab)
 
     const currentTab = await browser.tabs.query({active: true})
-    setStatus(currentTab)
+    setStatus(currentTab.id)
 }
 
 const setStatusByTabId = async (id) => {
     const tab = await browser.tabs.get(id)
-    setStatus(tab)
+    setStatus(tab.id)
 }
 
-const setStatus = (tab) => {
-    const active = isTabRunning(tab.id)
+const setStatus = (tabId) => {
+    const active = isTabRunning(tabId)
     browser.browserAction.setBadgeText({
         text: String(active)
     })

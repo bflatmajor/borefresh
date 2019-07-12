@@ -42,9 +42,9 @@ const setStatusByTabId = async (id) => {
 }
 
 const setStatus = (tabId) => {
-    const active = isTabRunning(tabId)
-    browser.browserAction.setBadgeText({
-        text: String(active)
+    const running = isTabRunning(tabId)
+    browser.browserAction.setIcon({
+        path: running ? runningIcon : defaultIcon
     })
 }
 
@@ -60,7 +60,7 @@ const isRunningUrl = (url) => !!findRunningItemByProperty('url')(url)
 const runTab = (tab) => {
     const timer = setInterval(() => {
         browser.tabs.reload(tab.id)
-    }, 10000)
+    }, timeout)
     runningItems.push({tab, timer})
 }
 
@@ -70,6 +70,9 @@ const stopTab = (id) => {
     runningItems.splice(runningItems.indexOf(runningItem), 1)
 }
 
+const timeout = 1000 * 60
 const runningItems = []
+const defaultIcon = './icon.svg'
+const runningIcon = './icon-running.svg'
 
 init()

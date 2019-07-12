@@ -4,9 +4,11 @@
     "version": "0.1.0",
     "description": "Refresh your tabs automatically.",
     "homepage_url": "https://github.com/gnirob/borefresh",
-    "browser_action": {},
-    "background": {
-        "scripts": ["background.js"]
+    "icons": {
+        "48": "icon-running.svg",
+        "96": "icon-running.svg"
     },
+    "browser_action": {},
+    "background": {"scripts": ["background.js"]},
     "permissions": ["tabs", "storage"]
 }

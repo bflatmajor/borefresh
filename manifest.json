@@ -1,0 +1,12 @@
+{
+    "manifest_version": 2,
+    "name": "Borefresh",
+    "version": "0.1.0",
+    "description": "Refresh your tabs automatically.",
+    "homepage_url": "https://github.com/gnirob/borefresh",
+    "browser_action": {},
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "permissions": ["tabs", "storage"]
+}

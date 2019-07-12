@@ -70,7 +70,7 @@ const stopTab = (id) => {
     runningItems.splice(runningItems.indexOf(runningItem), 1)
 }
 
-const timeout = 1000 * 60
+const timeout = 1000 * 111
 const runningItems = []
 const defaultIcon = './icon.svg'
 const runningIcon = './icon-running.svg'

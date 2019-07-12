@@ -1,7 +1,7 @@
 const init = async () => {
     browser.browserAction.onClicked.addListener(async (tab) => {
         if (isTabRunning(tab.id)) {
-            stopTab(tab)
+            stopTab(tab.id)
         } else {
             runTab(tab)
         }
@@ -29,6 +29,8 @@ const init = async () => {
         },
         {properties: ['status']}
     )
+
+    browser.tabs.onRemoved.addListener(stopTab)
 
     const currentTab = await browser.tabs.query({active: true})
     setStatus(currentTab)
@@ -62,8 +64,8 @@ const runTab = (tab) => {
     runningItems.push({tab, timer})
 }
 
-const stopTab = (tab) => {
-    const runningItem = findRunningItemByTabId(tab.id)
+const stopTab = (id) => {
+    const runningItem = findRunningItemByTabId(id)
     clearInterval(runningItem.timer)
     runningItems.splice(runningItems.indexOf(runningItem), 1)
 }

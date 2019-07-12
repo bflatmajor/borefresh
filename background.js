@@ -15,7 +15,7 @@ const init = async () => {
 
     browser.tabs.onUpdated.addListener(
         (id, {status}, tab) => {
-            if (isTabRunning(tab.id) || !isRunningUrl(tab.url)) {
+            if (isTabRunning(id) || !isRunningUrl(tab.url)) {
                 return
             }
 

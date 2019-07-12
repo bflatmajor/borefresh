@@ -1,4 +1,35 @@
 const init = async () => {
+    browser.browserAction.onClicked.addListener(async (tab) => {
+        if (isTabRunning(tab.id)) {
+            stopTab(tab)
+        } else {
+            runTab(tab)
+        }
+
+        setStatus(tab)
+    })
+
+    browser.tabs.onActivated.addListener(({tabId}) => {
+        setStatusByTabId(tabId)
+    })
+
+    browser.tabs.onUpdated.addListener(
+        (id, {status}, tab) => {
+            if (isTabRunning(tab.id) || !isRunningUrl(tab.url)) {
+                return
+            }
+
+            if (status === 'complete') {
+                runTab(tab)
+
+                if (tab.active) {
+                    setStatus(tab)
+                }
+            }
+        },
+        {properties: ['status']}
+    )
+
     const currentTab = await browser.tabs.query({active: true})
     setStatus(currentTab)
 }
@@ -38,36 +69,5 @@ const stopTab = (tab) => {
 }
 
 const runningItems = []
-
-browser.browserAction.onClicked.addListener(async (tab) => {
-    if (isTabRunning(tab.id)) {
-        stopTab(tab)
-    } else {
-        runTab(tab)
-    }
-
-    setStatus(tab)
-})
-
-browser.tabs.onActivated.addListener(({tabId}) => {
-    setStatusByTabId(tabId)
-})
-
-browser.tabs.onUpdated.addListener(
-    (id, {status}, tab) => {
-        if (isTabRunning(tab.id) || !isRunningUrl(tab.url)) {
-            return
-        }
-
-        if (status === 'complete') {
-            runTab(tab)
-
-            if (tab.active) {
-                setStatus(tab)
-            }
-        }
-    },
-    {properties: ['status']}
-)
 
 init()

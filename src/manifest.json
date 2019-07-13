@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
     "name": "Borefresh",
-    "version": "0.1.0",
-    "description": "Refresh your tabs automatically every 111 seconds.",
+    "version": "0.2.1",
+    "description": "Refresh my tabs automatically every 111 seconds.",
     "homepage_url": "https://github.com/gnirob/borefresh",
     "icons": {
         "48": "icon-running.svg",

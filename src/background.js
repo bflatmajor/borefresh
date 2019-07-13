@@ -32,8 +32,23 @@ const init = async () => {
 
     browser.tabs.onRemoved.addListener(stopTab)
 
+    setTimersByStoredUrls()
+
     const currentTab = await browser.tabs.query({active: true})
     setStatus(currentTab.id)
+}
+
+const setTimersByStoredUrls = async () => {
+    const urls = (await browser.storage.local.get()).urls
+
+    if (!urls) {
+        return
+    }
+
+    urls.forEach(async (url) => {
+        const tab = (await browser.tabs.query({url}))[0]
+        runTab(tab)
+    })
 }
 
 const setStatusByTabId = async (id) => {
@@ -62,12 +77,20 @@ const runTab = (tab) => {
         browser.tabs.reload(tab.id)
     }, timeout)
     runningItems.push({tab, timer})
+    setStoredUrls()
 }
 
 const stopTab = (id) => {
     const runningItem = findRunningItemByTabId(id)
     clearInterval(runningItem.timer)
     runningItems.splice(runningItems.indexOf(runningItem), 1)
+    setStoredUrls()
+}
+
+const setStoredUrls = () => {
+    browser.storage.local.set({
+        urls: [...new Set(runningItems.map(({tab}) => tab.url))]
+    })
 }
 
 const timeout = 1000 * 111

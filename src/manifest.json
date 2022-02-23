@@ -9,6 +9,8 @@
         "96": "icon-running.svg"
     },
     "browser_action": {},
-    "background": {"scripts": ["background.js"]},
+    "background": {
+        "scripts": ["browser-polyfill.min.js", "background.js"]
+    },
     "permissions": ["tabs", "storage"]
 }

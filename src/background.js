@@ -9,32 +9,29 @@ const init = async () => {
         setStatus(tab.id)
     })
 
-    browser.tabs.onActivated.addListener(({tabId}) => {
+    browser.tabs.onActivated.addListener(({ tabId }) => {
         setStatusByTabId(tabId)
     })
 
-    browser.tabs.onUpdated.addListener(
-        (id, {status}, tab) => {
-            if (isTabRunning(id) || !isRunningUrl(tab.url)) {
-                return
-            }
+    browser.tabs.onUpdated.addListener((id, { status }, tab) => {
+        if (isTabRunning(id) || !isRunningUrl(tab.url)) {
+            return
+        }
 
-            if (status === 'complete') {
-                runTab(tab)
+        if (status === 'complete') {
+            runTab(tab)
 
-                if (tab.active) {
-                    setStatus(tab.id)
-                }
+            if (tab.active) {
+                setStatus(tab.id)
             }
-        },
-        {properties: ['status']}
-    )
+        }
+    })
 
     browser.tabs.onRemoved.addListener(stopTab)
 
     setTimersByStoredUrls()
 
-    const currentTab = await browser.tabs.query({active: true})
+    const [currentTab] = await browser.tabs.query({ active: true })
     setStatus(currentTab.id)
 }
 
@@ -46,7 +43,7 @@ const setTimersByStoredUrls = async () => {
     }
 
     urls.forEach(async (url) => {
-        const tab = (await browser.tabs.query({url}))[0]
+        const tab = (await browser.tabs.query({ url }))[0]
         runTab(tab)
     })
 }
@@ -59,7 +56,7 @@ const setStatusByTabId = async (id) => {
 const setStatus = (tabId) => {
     const running = isTabRunning(tabId)
     browser.browserAction.setIcon({
-        path: running ? runningIcon : defaultIcon
+        path: running ? runningIcon : defaultIcon,
     })
 }
 
@@ -76,7 +73,7 @@ const runTab = (tab) => {
     const timer = setInterval(() => {
         browser.tabs.reload(tab.id)
     }, timeout)
-    runningItems.push({tab, timer})
+    runningItems.push({ tab, timer })
     setStoredUrls()
 }
 
@@ -89,7 +86,7 @@ const stopTab = (id) => {
 
 const setStoredUrls = () => {
     browser.storage.local.set({
-        urls: [...new Set(runningItems.map(({tab}) => tab.url))]
+        urls: [...new Set(runningItems.map(({ tab }) => tab.url))],
     })
 }
 

@@ -1,0 +1,24 @@
+{
+  "name": "borefresh",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bflatmajor/borefresh.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/bflatmajor/borefresh/issues"
+  },
+  "homepage": "https://github.com/bflatmajor/borefresh#readme",
+  "devDependencies": {
+    "@types/webextension-polyfill": "^0.8.2"
+  }
+}

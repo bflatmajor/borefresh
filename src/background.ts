@@ -36,7 +36,7 @@ const init = async () => {
 }
 
 const setTimersByStoredUrls = async () => {
-    const urls = (await browser.storage.local.get()).urls
+    const urls = (await browser.storage.local.get()).urls as Tab['url'][]
 
     if (!urls) {
         return
@@ -48,28 +48,34 @@ const setTimersByStoredUrls = async () => {
     })
 }
 
-const setStatusByTabId = async (id) => {
+const setStatusByTabId = async (id: Tab['id']) => {
+    if (typeof id === 'undefined') {
+        return
+    }
+
     const tab = await browser.tabs.get(id)
     setStatus(tab.id)
 }
 
-const setStatus = (tabId) => {
+const setStatus = (tabId: Tab['id']) => {
     const running = isTabRunning(tabId)
     browser.browserAction.setIcon({
         path: running ? runningIcon : defaultIcon,
     })
 }
 
-const findRunningItemByProperty = (name) => (value) =>
-    runningItems.find((runningItem) => runningItem.tab[name] === value)
+const findRunningItemByProperty =
+    (name: keyof Tab) => (value: Tab[keyof Tab]) =>
+        runningItems.find((runningItem) => runningItem.tab[name] === value)
 
 const findRunningItemByTabId = findRunningItemByProperty('id')
 
-const isTabRunning = (id) => !!findRunningItemByTabId(id)
+const isTabRunning = (id: Tab['id']) => !!findRunningItemByTabId(id)
 
-const isRunningUrl = (url) => !!findRunningItemByProperty('url')(url)
+const isRunningUrl = (url: Tab['url']) =>
+    !!findRunningItemByProperty('url')(url)
 
-const runTab = (tab) => {
+const runTab = (tab: Tab) => {
     const timer = setInterval(() => {
         browser.tabs.reload(tab.id)
     }, timeout)
@@ -77,8 +83,13 @@ const runTab = (tab) => {
     setStoredUrls()
 }
 
-const stopTab = (id) => {
+const stopTab = (id: Tab['id']) => {
     const runningItem = findRunningItemByTabId(id)
+
+    if (!runningItem) {
+        return
+    }
+
     clearInterval(runningItem.timer)
     runningItems.splice(runningItems.indexOf(runningItem), 1)
     setStoredUrls()
@@ -91,7 +102,7 @@ const setStoredUrls = () => {
 }
 
 const timeout = 1000 * 111
-const runningItems = []
+const runningItems: { tab: Tab; timer: number }[] = []
 const defaultIcon = './icon.svg'
 const runningIcon = './icon-running.svg'
 

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "chokidar './src/' -c 'npm run build'",
+    "start": "npm run build && npm run watch",
+    "watch": "chokidar './src/' -c 'npm run build'",
     "build": "tsc && npm run copy",
     "copy": "cp -r ./src/ ./dist && rm -rf ./dist/*.ts"
   },

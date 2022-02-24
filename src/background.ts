@@ -43,7 +43,12 @@ const setTimersByStoredUrls = async () => {
     }
 
     urls.forEach(async (url) => {
-        const tab = (await browser.tabs.query({ url }))[0]
+        const [tab] = await browser.tabs.query({ url })
+
+        if (!tab) {
+            return
+        }
+
         runTab(tab)
     })
 }
